@@ -1,0 +1,598 @@
+flutter build apk --release
+
+dart run build_runner watch -d
+
+change pacakge
+dart run change_app_package_name:main com.firsthale
+
+dart run change_app_package_name:main com.new.package.name --android
+
+dart run change_app_package_name:main com.new.package.name --ios
+
+flutter localissation flutter gen-l10n
+
+God detail page GodDetailScreen yaha hai
+
+//uploads/No_Image_Available.jpg
+
+AartiPlayerPage
+
+MobileHomeMediumForYou medium ka for you page
+
+AartiChalisaHtmlViewrSmall
+NaamJaapDigitalCunter jo home page pe banner dikh raha hai naam jaap ka o hai
+
+HomeHorizontalTabs  ye home page me tab hai
+
+AartiPlayerPage o hai jispe song lyrics ke sath play ho raha hai
+MobileHomeSmall
+  static Widget getTabChildView(int index) {
+    switch (index) {
+      case 0:
+        return MobileHomeSmallViewPage();
+      case 1:
+        return MobileHomeSmallForYou();
+      case 2:
+        return MobileHomeTemplePage();
+      case 3:
+        return MobileHomeGodPage();
+      case 4:
+        return MobileHomeSewaPage();
+      case 5:
+        return MobileHomeSantPage();
+      case 6:
+        return MobileHomeRewardPage();
+      default:
+        return SizedBox();
+    }
+  }
+jo home page me seva ka banner dikh raha hai   SewaCardUi
+  sewa module
+
+  SevaPageUi  jaha pe prising ka list aata hai
+  BookSewaPage book sewa page o page hai jaha se order book hota hai
+
+SewaStatusPage Seva status page, jaha pe timeline dikh rha hai status ka
+SewaVideoProofPage  is page pe raise concer ya Approved krne wala hai
+
+PanchangScreenNew calendar screen
+
+TempleDetailScreen temple detail page
+GodDetailScreenn god detail page
+
+Apk size
+
+ flutter build apk --split-per-abi
+
+app-arm64-v8a-release.apk	✅ Most modern Android devices (64-bit)	Newer phones (2020+) like Samsung, OnePlus, Google Pixel
+app-armeabi-v7a-release.apk	✅ Older 32-bit Android devices	Older phones (pre-2020) like low-end or budget Android devices
+app-x86_64-release.apk	❌ Not for mobile (for emulators/Chromebooks)	Android emulators or some x86-based tablets
+
+
+PanchangScreenNew new Calendar hai
+
+
+AartiChalisaListPage o hai jispe category wise aarti chalisa ka listing dikh raha hai grid me
+
+Home page ka bloc MobileHomeBloc
+
+&tithi=Chaturthi&day=Monday
+
+
+type 1 --> isme mujhe filter ke abse aarti,chalisa,mantra.. aur penchang,horscope wale dikhana hai
+Environment
+POST
+http://localhost:5000/api/banner/create
+title:{"hi":"आज का पंचांग","en":"Today's Panchang"}
+actionType:panchang
+relatedModel:aartichalisadata
+relatedItem:696496159e92cfb003d54ac9
+priority:10
+isActive:true
+customPayload:{"autoplay":true,"showLyrics":true}
+startAt:"12-01-2026"
+bannerType:data_driven
+customPayload:{"showbutton":false}
+
+
+
+type 2 banners------> isme bs mujhe naam jaap wala banner dikhan hai
+jaap banner add
+title:{"hi":"नाम जप के लिए डिजिटल काउंटर↵","en":"Digital Counter for Naam Jap"}
+actionType:jaapcounter
+//relatedModel:aartichalisadata
+//relatedItem:696496159e92cfb003d54ac9
+priority:10
+isActive:true
+customPayload:{"autoplay":false,"showLyrics":false}
+startAt:null
+bannerType:cta_button_jaap
+customPayload:{"showbutton":true}
+buttonText: {↵  "hi": "जप शुरू करें",↵  "en": "Start Jap"↵}
+
+
+type 3 banners---> isme aarti chalisa jo banner me add iya hai o aayega isme relatedModel dala hai
+ye banner hai aarti chalisha wala ka
+title:{"hi":"नाम जप के लिए डिजिटल काउंटर","en":"Digital Counter for Naam Jap"}
+actionType:aarti_list
+relatedModel:aartichalisadata
+relatedItem:696496159e92cfb003d54ac9
+priority:10
+isActive:true
+customPayload:{"autoplay":false,"showLyrics":false,"showbutton":true}
+startAt:null
+bannerType:aarti_chalisa_banmer
+customPayload:{"showbutton":true}
+buttonText: {↵  "hi": "जप शुरू करें",↵  "en": "Start Jap"↵}
+
+
+
+type 3 ka hi hai
+title:{"hi":"नाम जप के लिए डिजिटल काउंटर","en":"Digital Counter for Naam Jap"}
+actionType:aarti_list
+relatedModel:aartichalisadata
+relatedItem:69689f8aa0262df4c880b35f
+priority:10
+isActive:true
+customPayload:{"autoplay":false,"showLyrics":false,"showbutton":true}
+startAt:null
+bannerType:aarti_chalisa_banmer
+customPayload:{"showbutton":true}
+buttonText: {↵  "hi": "जप शुरू करें",↵  "en": "Start Jap"↵}
+
+
+
+
+type 4 banner---------> isme mujhe event wala banner dikhana hai
+event banner
+title:{"hi":"नाम जप के लिए डिजिटल काउंटर","en":"Digital Counter for Naam Jap"}
+actionType:event_action
+//relatedModel:aartichalisadata
+//relatedItem:696496159e92cfb003d54ac9
+priority:10
+isActive:true
+customPayload:{"autoplay":false,"showLyrics":false,"showbutton":true}
+startAt:null
+bannerType:event_banner
+customPayload:{"showbutton":true}
+buttonText: {↵  "hi": "जप शुरू करें",↵  "en": "अभी दाखिला लें"↵}
+
+
+
+ssh -i "mobilemandirappbackend.pem" ec2-user@3.110.121.167
+cd /home/ec2-user/mobilemandirbackend
+
+pm2 stop mobilemandirbackend || true
+pm2 delete mobilemandirbackend || true
+
+git reset --hard
+git clean -fd
+git pull origin main
+
+rm -rf node_modules package-lock.json
+npm install --production
+
+pm2 start index.js --name mobilemandirbackend
+pm2 save
+
+pm2 status
+pm2 logs mobilemandirbackend --lines 50
+
+
+
+
+agr weekly select kiya hai and day selected hai mon,wed,fri
+
+to ye curl hai
+
+
+curl -X 'GET' \
+  'https://release.mobilemandirapp.com/api/api/user/seva/schedule-preview?amount=1100&frequency=weekly&weekdays=mon%2Cwed%2Cfri&start=2026-08-20' \
+  -H 'accept: application/json'
+
+  aur response hai
+  {
+    "success": true,
+    "message": "SEVA_SCHEDULE_PREVIEW_FETCHED",
+    "data": {
+      "frequency": "weekly",
+      "weekdays": [
+        "mon",
+        "wed",
+        "fri"
+      ],
+      "tithiIds": [],
+      "cycleDays": 30,
+      "cycleStart": "2026-08-20",
+      "cycleEnd": "2026-09-18",
+      "occurrenceCount": 13,
+      "perDayAmount": 86,
+      "formattedPerDayAmount": "₹86",
+      "formattedCycleAmount": "₹1,118",
+      "dates": [
+        {
+          "date": "2026-08-21",
+          "weekday": "fri",
+          "amount": 86,
+          "formattedAmount": "₹86"
+        },
+        {
+          "date": "2026-08-24",
+          "weekday": "mon",
+          "amount": 86,
+          "formattedAmount": "₹86"
+        },
+        {
+          "date": "2026-08-26",
+          "weekday": "wed",
+          "amount": 86,
+          "formattedAmount": "₹86"
+        },
+        {
+          "date": "2026-08-28",
+          "weekday": "fri",
+          "amount": 86,
+          "formattedAmount": "₹86"
+        },
+        {
+          "date": "2026-08-31",
+          "weekday": "mon",
+          "amount": 86,
+          "formattedAmount": "₹86"
+        },
+        {
+          "date": "2026-09-02",
+          "weekday": "wed",
+          "amount": 86,
+          "formattedAmount": "₹86"
+        },
+        {
+          "date": "2026-09-04",
+          "weekday": "fri",
+          "amount": 86,
+          "formattedAmount": "₹86"
+        },
+        {
+          "date": "2026-09-07",
+          "weekday": "mon",
+          "amount": 86,
+          "formattedAmount": "₹86"
+        },
+        {
+          "date": "2026-09-09",
+          "weekday": "wed",
+          "amount": 86,
+          "formattedAmount": "₹86"
+        },
+        {
+          "date": "2026-09-11",
+          "weekday": "fri",
+          "amount": 86,
+          "formattedAmount": "₹86"
+        },
+        {
+          "date": "2026-09-14",
+          "weekday": "mon",
+          "amount": 86,
+          "formattedAmount": "₹86"
+        },
+        {
+          "date": "2026-09-16",
+          "weekday": "wed",
+          "amount": 86,
+          "formattedAmount": "₹86"
+        },
+        {
+          "date": "2026-09-18",
+          "weekday": "fri",
+          "amount": 86,
+          "formattedAmount": "₹86"
+        }
+      ],
+      "pricing": {
+        "vendorAmount": 1100,
+        "platformFee": 15,
+        "gstAmount": 3,
+        "grossAmount": 1118,
+        "formattedVendorAmount": "₹1,100",
+        "formattedPlatformFee": "₹15",
+        "formattedGstAmount": "₹3",
+        "formattedGrossAmount": "₹1,118"
+      }
+    },
+    "errors": null
+  }
+
+  agr daily select kiya hai to
+ye curl hai
+curl -X 'GET' \
+  'https://release.mobilemandirapp.com/api/api/user/seva/schedule-preview?amount=1100&frequency=daily&start=2026-08-20' \
+  -H 'accept: application/json'
+
+  response ye hai
+
+  {
+    "success": true,
+    "message": "SEVA_SCHEDULE_PREVIEW_FETCHED",
+    "data": {
+      "frequency": "daily",
+      "weekdays": [],
+      "tithiIds": [],
+      "cycleDays": 30,
+      "cycleStart": "2026-08-20",
+      "cycleEnd": "2026-09-18",
+      "occurrenceCount": 30,
+      "perDayAmount": 37,
+      "formattedPerDayAmount": "₹37",
+      "formattedCycleAmount": "₹1,118",
+      "dates": [
+        {
+          "date": "2026-08-20",
+          "weekday": "thu",
+          "amount": 37,
+          "formattedAmount": "₹37"
+        },
+        {
+          "date": "2026-08-21",
+          "weekday": "fri",
+          "amount": 37,
+          "formattedAmount": "₹37"
+        },
+        {
+          "date": "2026-08-22",
+          "weekday": "sat",
+          "amount": 37,
+          "formattedAmount": "₹37"
+        },
+        {
+          "date": "2026-08-23",
+          "weekday": "sun",
+          "amount": 37,
+          "formattedAmount": "₹37"
+        },
+        {
+          "date": "2026-08-24",
+          "weekday": "mon",
+          "amount": 37,
+          "formattedAmount": "₹37"
+        },
+        {
+          "date": "2026-08-25",
+          "weekday": "tue",
+          "amount": 37,
+          "formattedAmount": "₹37"
+        },
+        {
+          "date": "2026-08-26",
+          "weekday": "wed",
+          "amount": 37,
+          "formattedAmount": "₹37"
+        },
+        {
+          "date": "2026-08-27",
+          "weekday": "thu",
+          "amount": 37,
+          "formattedAmount": "₹37"
+        },
+        {
+          "date": "2026-08-28",
+          "weekday": "fri",
+          "amount": 37,
+          "formattedAmount": "₹37"
+        },
+        {
+          "date": "2026-08-29",
+          "weekday": "sat",
+          "amount": 37,
+          "formattedAmount": "₹37"
+        },
+        {
+          "date": "2026-08-30",
+          "weekday": "sun",
+          "amount": 37,
+          "formattedAmount": "₹37"
+        },
+        {
+          "date": "2026-08-31",
+          "weekday": "mon",
+          "amount": 37,
+          "formattedAmount": "₹37"
+        },
+        {
+          "date": "2026-09-01",
+          "weekday": "tue",
+          "amount": 37,
+          "formattedAmount": "₹37"
+        },
+        {
+          "date": "2026-09-02",
+          "weekday": "wed",
+          "amount": 37,
+          "formattedAmount": "₹37"
+        },
+        {
+          "date": "2026-09-03",
+          "weekday": "thu",
+          "amount": 37,
+          "formattedAmount": "₹37"
+        },
+        {
+          "date": "2026-09-04",
+          "weekday": "fri",
+          "amount": 37,
+          "formattedAmount": "₹37"
+        },
+        {
+          "date": "2026-09-05",
+          "weekday": "sat",
+          "amount": 37,
+          "formattedAmount": "₹37"
+        },
+        {
+          "date": "2026-09-06",
+          "weekday": "sun",
+          "amount": 37,
+          "formattedAmount": "₹37"
+        },
+        {
+          "date": "2026-09-07",
+          "weekday": "mon",
+          "amount": 37,
+          "formattedAmount": "₹37"
+        },
+        {
+          "date": "2026-09-08",
+          "weekday": "tue",
+          "amount": 37,
+          "formattedAmount": "₹37"
+        },
+        {
+          "date": "2026-09-09",
+          "weekday": "wed",
+          "amount": 37,
+          "formattedAmount": "₹37"
+        },
+        {
+          "date": "2026-09-10",
+          "weekday": "thu",
+          "amount": 37,
+          "formattedAmount": "₹37"
+        },
+        {
+          "date": "2026-09-11",
+          "weekday": "fri",
+          "amount": 37,
+          "formattedAmount": "₹37"
+        },
+        {
+          "date": "2026-09-12",
+          "weekday": "sat",
+          "amount": 37,
+          "formattedAmount": "₹37"
+        },
+        {
+          "date": "2026-09-13",
+          "weekday": "sun",
+          "amount": 37,
+          "formattedAmount": "₹37"
+        },
+        {
+          "date": "2026-09-14",
+          "weekday": "mon",
+          "amount": 37,
+          "formattedAmount": "₹37"
+        },
+        {
+          "date": "2026-09-15",
+          "weekday": "tue",
+          "amount": 37,
+          "formattedAmount": "₹37"
+        },
+        {
+          "date": "2026-09-16",
+          "weekday": "wed",
+          "amount": 37,
+          "formattedAmount": "₹37"
+        },
+        {
+          "date": "2026-09-17",
+          "weekday": "thu",
+          "amount": 37,
+          "formattedAmount": "₹37"
+        },
+        {
+          "date": "2026-09-18",
+          "weekday": "fri",
+          "amount": 45,
+          "formattedAmount": "₹45"
+        }
+      ],
+      "pricing": {
+        "vendorAmount": 1100,
+        "platformFee": 15,
+        "gstAmount": 3,
+        "grossAmount": 1118,
+        "formattedVendorAmount": "₹1,100",
+        "formattedPlatformFee": "₹15",
+        "formattedGstAmount": "₹3",
+        "formattedGrossAmount": "₹1,118"
+      }
+    },
+    "errors": null
+  }
+
+  agr tithi select kiya hai to
+  ye curl hai
+curl -X 'GET' \
+  'https://release.mobilemandirapp.com/api/api/user/seva/schedule-preview?amount=1100&frequency=tithi&tithiIds=6a06a96ce63677de92ca2ff5%2C69f896d5e3d8f88285932147&start=2026-08-20' \
+  -H 'accept: application/json'
+
+  ye response hai
+
+  {
+    "success": true,
+    "message": "SEVA_SCHEDULE_PREVIEW_FETCHED",
+    "data": {
+      "frequency": "tithi",
+      "weekdays": [],
+      "tithiIds": [
+        "6a06a96ce63677de92ca2ff5",
+        "69f896d5e3d8f88285932147"
+      ],
+      "cycleDays": 30,
+      "cycleStart": "2026-08-20",
+      "cycleEnd": "2026-09-18",
+      "occurrenceCount": 4,
+      "perDayAmount": 279,
+      "formattedPerDayAmount": "₹279",
+      "formattedCycleAmount": "₹1,118",
+      "dates": [
+        {
+          "date": "2026-08-28",
+          "weekday": "fri",
+          "amount": 279,
+          "formattedAmount": "₹279"
+        },
+        {
+          "date": "2026-08-29",
+          "weekday": "sat",
+          "amount": 279,
+          "formattedAmount": "₹279"
+        },
+        {
+          "date": "2026-09-11",
+          "weekday": "fri",
+          "amount": 279,
+          "formattedAmount": "₹279"
+        },
+        {
+          "date": "2026-09-12",
+          "weekday": "sat",
+          "amount": 281,
+          "formattedAmount": "₹281"
+        }
+      ],
+      "pricing": {
+        "vendorAmount": 1100,
+        "platformFee": 15,
+        "gstAmount": 3,
+        "grossAmount": 1118,
+        "formattedVendorAmount": "₹1,100",
+        "formattedPlatformFee": "₹15",
+        "formattedGstAmount": "₹3",
+        "formattedGrossAmount": "₹1,118"
+      }
+    },
+    "errors": null
+  }
+
+
+  jis trah se mai repo and repo impl and use case bloc event and state use krke api implement kiya hu , aur base rul appp_constant se liya hu
+  waise hi artecture follow krke ye api call kro
+
+  daily ka api call hoga day wale p[e click krke
+
+  weekly and titihi ke time call hoga
+  select krne ke baad jab user bottom dialog ko close krega tb
+
+  model class bhi wasie hi bnana hai jaise mai baki ke liye bnaaya hu freezed use krke

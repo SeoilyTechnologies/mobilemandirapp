@@ -1,0 +1,98 @@
+{
+  "project_info": {
+    "project_number": "192317191997",
+    "project_id": "mobile-mandir",
+    "storage_bucket": "mobile-mandir.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:192317191997:android:820c1666352e1885c9b754",
+        "android_client_info": {
+          "package_name": "com.seoily.mmpartner"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "192317191997-1bgve5gsfocvc21vclfdcecho7k52afg.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.seoily.mmpartner",
+            "certificate_hash": "62922e37f3e33b6596e0f83dc5d4ed1d090f316d"
+          }
+        },
+        {
+          "client_id": "192317191997-pvobcao384t3ef01altbfcqa717mm0gf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBXT2pgbHf5har6eTAPj9YBkrtjIu3SjcQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "192317191997-pvobcao384t3ef01altbfcqa717mm0gf.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "192317191997-iio9ouf0u3r3vnppufshkiia2l1jpi56.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.seoily.mmpartner"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:192317191997:android:890c5101081ac2c3c9b754",
+        "android_client_info": {
+          "package_name": "com.seoily.mobilemandir"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "192317191997-ru0dgu2vf1e5ojvkfn73rghah1a4mt1s.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.seoily.mobilemandir",
+            "certificate_hash": "62922e37f3e33b6596e0f83dc5d4ed1d090f316d"
+          }
+        },
+        {
+          "client_id": "192317191997-pvobcao384t3ef01altbfcqa717mm0gf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBXT2pgbHf5har6eTAPj9YBkrtjIu3SjcQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "192317191997-pvobcao384t3ef01altbfcqa717mm0gf.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "192317191997-iio9ouf0u3r3vnppufshkiia2l1jpi56.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.seoily.mmpartner"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,115 @@
+
+subscription api curl
+postman request 'https://release.mobilemandirapp.com/api/api/user/seva/subscriptions/my?status=all&page=1&limit=50' \
+  --header 'Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhNGRkYWFlMmUwZTYyZjk3MjZiYzU5OSIsInJvbGUiOiJ2ZW5kb3IiLCJhcHBUeXBlIjoiVVNFUl9BUFAiLCJ0b2tlblZlcnNpb24iOjc1LCJvc1R5cGUiOiJpb3MiLCJpYXQiOjE3ODY0NDQwMDQsImV4cCI6MTc4NzMwODAwNH0.ZPRNFgufMfP1nWKRQ43O8fJhRJnZRqayfCgEmaHZC_A'
+
+subscription api response
+
+{
+    "success": true,
+    "message": "MY_SUBSCRIPTIONS_FETCHED",
+    "data": {
+        "list": [
+            {
+                "_id": "6ab4b7ed131e4795702d1f00",
+                "sevaName": "Gau Seva",
+                "sevaNameHi": "गौ सेवा",
+                "donorName": "Manish Kumar SK",
+                "frequency": "daily",
+                "weekdays": [],
+                "amount": 3048,
+                "formattedAmount": "₹3,048",
+                "vendorAmount": 3030,
+                "formattedVendorAmount": "₹3,030",
+                "status": "active",
+                "statusLabel": "Active",
+                "cycleStartAt": "2026-09-23T18:30:00.000Z",
+                "cycleEndAt": "2026-10-23T18:30:00.000Z",
+                "createdAt": "2026-09-24T05:41:01.665Z",
+                "service": {
+                    "_id": "69dc9cf169379e4266a9d8fd",
+                    "name": {
+                        "hi": "गौ सेवा",
+                        "en": "Gau Seva"
+                    },
+                    "slug": "gau-seva",
+                    "icon": "vendor/services/ae0c8a491e201645738f2a8810a658b2.webp"
+                },
+                "totalOccurrences": 30,
+                "completedOccurrences": 0
+            },
+            {
+                "_id": "6ab3c760131e4795702aa261",
+                "sevaName": "Gau Seva",
+                "sevaNameHi": "गौ सेवा",
+                "donorName": "Manish Kumar SK",
+                "frequency": "weekly",
+                "weekdays": [
+                    "mon",
+                    "tue",
+                    "wed",
+                    "thu",
+                    "fri"
+                ],
+                "amount": 2240,
+                "formattedAmount": "₹2,240",
+                "vendorAmount": 2222,
+                "formattedVendorAmount": "₹2,222",
+                "status": "active",
+                "statusLabel": "Active",
+                "cycleStartAt": "2026-09-22T18:30:00.000Z",
+                "cycleEndAt": "2026-10-22T18:30:00.000Z",
+                "createdAt": "2026-09-23T12:34:40.320Z",
+                "service": {
+                    "_id": "69dc9cf169379e4266a9d8fd",
+                    "name": {
+                        "hi": "गौ सेवा",
+                        "en": "Gau Seva"
+                    },
+                    "slug": "gau-seva",
+                    "icon": "vendor/services/ae0c8a491e201645738f2a8810a658b2.webp"
+                },
+                "totalOccurrences": 22,
+                "completedOccurrences": 0
+            },
+            {
+                "_id": "6aaa6138131e479570171ac1",
+                "sevaName": "Gau Seva",
+                "sevaNameHi": "गौ सेवा",
+                "donorName": "Manish Kumar SK",
+                "frequency": "daily",
+                "weekdays": [],
+                "amount": 3048,
+                "formattedAmount": "₹3,048",
+                "vendorAmount": 3030,
+                "formattedVendorAmount": "₹3,030",
+                "status": "active",
+                "statusLabel": "Active",
+                "cycleStartAt": "2026-09-15T18:30:00.000Z",
+                "cycleEndAt": "2026-10-15T18:30:00.000Z",
+                "createdAt": "2026-09-16T09:28:24.314Z",
+                "service": {
+                    "_id": "69dc9cf169379e4266a9d8fd",
+                    "name": {
+                        "hi": "गौ सेवा",
+                        "en": "Gau Seva"
+                    },
+                    "slug": "gau-seva",
+                    "icon": "vendor/services/ae0c8a491e201645738f2a8810a658b2.webp"
+                },
+                "totalOccurrences": 30,
+                "completedOccurrences": 1
+            }
+        ],
+        "pagination": {
+            "page": 1,
+            "limit": 50,
+            "total": 3,
+            "pages": 1
+        }
+    },
+    "errors": null
+}
+
+
+================================================================================================================================================

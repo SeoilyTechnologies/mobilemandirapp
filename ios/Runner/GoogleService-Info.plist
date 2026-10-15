@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>192317191997-mrjh8aan77qdjtppmf4ua59vsspu306u.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.192317191997-mrjh8aan77qdjtppmf4ua59vsspu306u</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>192317191997-1bgve5gsfocvc21vclfdcecho7k52afg.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyDwbUPASzuB69kHbeT1sccV60mhb0Z-XuA</string>
+	<key>GCM_SENDER_ID</key>
+	<string>192317191997</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.seoily.mobilemandir</string>
+	<key>PROJECT_ID</key>
+	<string>mobile-mandir</string>
+	<key>STORAGE_BUCKET</key>
+	<string>mobile-mandir.firebasestorage.app</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:192317191997:ios:758f09c8a54cd574c9b754</string>
+</dict>
+</plist>

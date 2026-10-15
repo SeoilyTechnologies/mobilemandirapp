@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+
+    <!-- Default: allow HTTPS everywhere (S3, CloudFront, APIs) -->
+    <base-config cleartextTrafficPermitted="false">
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </base-config>
+
+    <!-- Allow HTTP for local development (Android Emulator) -->
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="true">10.0.2.2</domain>
+        <domain includeSubdomains="true">localhost</domain>
+    </domain-config>
+
+    <!-- Explicitly allow CloudFront (optional but safe) -->
+    <domain-config cleartextTrafficPermitted="false">
+        <domain includeSubdomains="true">d2tm3flx9gckx.cloudfront.net</domain>
+    </domain-config>
+
+</network-security-config>

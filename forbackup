@@ -1,0 +1,732 @@
+
+// class Home extends StatefulWidget {
+//   const Home({super.key});
+//
+//   @override
+//   State<Home> createState() => _HomeState();
+// }
+//
+// class _HomeState extends State<Home> with TickerProviderStateMixin {
+//   // -------------------------
+//   // Bell (pendulum) animation
+//   // -------------------------
+//   late final AnimationController _leftBellAnimationController;
+//   late final Animation<double> _leftBellAnimation;
+//   late final AnimationController _rightBellAnimationController;
+//   late final Animation<double> _rightBellAnimation;
+//
+//   Timer? _bellStopTimer; // stops bells after 3s
+//
+//   Timer? _animationTimer;
+//
+//   List<SnowModel> listSnow = [];
+//   Timer? _snowTimer;
+//   bool isSnowing = false;
+//
+//   // Context reference if needed after first frame
+//   BuildContext? myContext;
+//
+//   // Thali / Aarti animation
+//   late final AnimationController _thaliAnimationController;
+//   late final Animation<double> _thaliAnimation; // 0..1
+//   bool aartitap = false;
+//
+//   // Dragging & position
+//   double positionX = 0.0;
+//   double positionY = 0.0;
+//   bool isDragging = false;
+//
+//   // Audio
+//   late final AudioPlayer audioPlayer;
+//   bool isPlayingA = false; // shankh
+//   bool isPlayingB = false; // hanuman chalisa
+//
+//   /*aarti sound*/
+//   late final AudioPlayer aartiPlayer;
+//   bool isPlayingAarti = false; // shankh
+//
+//   late final AudioPlayer _playerShankh;
+//   bool _isPlayingShankh = false;
+//   StreamSubscription<PlayerState>? _shankhStateSub;
+//
+//   Future<void> _debugAndPlayShankhFull() async {
+//     debugPrint('Tapped shankh - debugAndPlay start');
+//     audioPlayer.stop();
+//
+//     try {
+//       final ByteData bd = await rootBundle.load('assets/shankh-sound.mp3');
+//       debugPrint('rootBundle.load OK. bytes=${bd.lengthInBytes}');
+//
+//       if (bd.lengthInBytes < 10) {
+//         debugPrint('Asset too small — probably corrupted or empty.');
+//         return;
+//       }
+//
+//       final tmpDir = await getTemporaryDirectory();
+//       final tmpFilePath =
+//           '${tmpDir.path}/shankh_debug_${DateTime.now().millisecondsSinceEpoch}.mp3';
+//       final tmpFile = File(tmpFilePath);
+//       await tmpFile.writeAsBytes(bd.buffer.asUint8List());
+//       debugPrint(
+//         'Wrote temp file: $tmpFilePath (size=${await tmpFile.length()})',
+//       );
+//
+//       // stop any current playback
+//       await _playerShankh.stop();
+//
+//       // make sure looping is OFF
+//       await _playerShankh.setLoopMode(LoopMode.off);
+//
+//       // load the file once
+//       await _playerShankh.setFilePath(tmpFilePath);
+//
+//       // start playback from beginning
+//       await _playerShankh.seek(Duration.zero);
+//       await _playerShankh.play();
+//
+//       debugPrint('Played once via setFilePath');
+//     } catch (e, st) {
+//       debugPrint('Error in shankh playback: $e\n$st');
+//     }
+//   }
+//
+//   void bellAnimation() {
+//     // --- Smooth Sine-based swing setup ---
+//     _leftBellAnimationController = AnimationController(
+//       vsync: this,
+//       duration: const Duration(seconds: 2), // slower = smoother
+//     );
+//
+//     _rightBellAnimationController = AnimationController(
+//       vsync: this,
+//       duration: const Duration(seconds: 2),
+//     );
+//
+//     // Note: We'll use sine wave, so no Tween needed here
+//   }
+//
+//   @override
+//   void initState() {
+//     super.initState();
+//
+//     // _loadAd();
+//
+//     audioPlayer = AudioPlayer();
+//     aartiPlayer = AudioPlayer();
+//
+//     // Keep a context ref if you want to use it after build
+//     WidgetsBinding.instance.addPostFrameCallback((_) {
+//       myContext = context;
+//     });
+//
+//     bellAnimation();
+//     _thaliAnimationController = AnimationController(
+//       vsync: this,
+//       duration: const Duration(
+//         seconds: 9,
+//       ), // reasonable duration for aarti motion
+//     );
+//
+//     // We animate 0..1 and multiply by 2*pi where needed for circular motion
+//     _thaliAnimation = Tween<double>(begin: 0, end: 3).animate(
+//       CurvedAnimation(parent: _thaliAnimationController, curve: Curves.linear),
+//     );
+//
+//     _thaliAnimationController.addStatusListener((status) {
+//       if (status == AnimationStatus.completed) {
+//         // If you want continuous loop, use repeat() instead of single forward
+//         // For a single run, reset state
+//         if (status == AnimationStatus.completed) {
+//           stopThaliAnimationAndResetPosition();
+//         }
+//       }
+//     });
+//
+//     _playerShankh = AudioPlayer();
+//     // Optional: preload asset to catch path errors early
+//     _playerShankh.setAsset('assets/shankh-sound.mp3').catchError((e) {
+//       debugPrint('Preload shankh failed: $e');
+//     });
+//     // Listen for completion to reset flag
+//     _shankhStateSub = _playerShankh.playerStateStream.listen((playerState) {
+//       if (playerState.processingState == ProcessingState.completed) {
+//         // playback finished
+//         _playerShankh.stop();
+//         if (mounted) {
+//           setState(() => _isPlayingShankh = false);
+//         }
+//       }
+//     });
+//
+//     _stopBellsAndCenter();
+//   }
+//
+//   // 3) Play / toggle function (call this from onTap)
+//   Future<void> _playOrToggleShankh() async {
+//     debugPrint('Tapped shankh');
+//     try {
+//       // If currently playing -> pause
+//       if (_isPlayingShankh) {
+//         await _playerShankh.pause();
+//         if (mounted) setState(() => _isPlayingShankh = false);
+//         return;
+//       }
+//
+//       // Ensure start from beginning
+//       await _playerShankh.seek(Duration.zero);
+//
+//       // If asset wasn't loaded earlier, handle setAsset error here (optional)
+//       // await _playerShankh.setAsset('assets/shankh-sound.mp3');
+//
+//       await _playerShankh.play();
+//       if (mounted) setState(() => _isPlayingShankh = true);
+//     } catch (e, st) {
+//       debugPrint('Error playing shankh: $e\n$st');
+//       // Show small UI feedback if you want:
+//       // ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Sound error')));
+//     }
+//   }
+//
+//   // 4) Stop/cleanup helper (optional)
+//   Future<void> _stopShankh() async {
+//     try {
+//       await _playerShankh.stop();
+//     } catch (e) {
+//       debugPrint('Stop shankh error: $e');
+//     } finally {
+//       if (mounted) setState(() => _isPlayingShankh = false);
+//     }
+//   }
+//
+//
+//
+//   Future<void> _stopAudioA() async {
+//     try {
+//       await audioPlayer.pause();
+//     } catch (e) {}
+//     setState(() {
+//       isPlayingA = false;
+//     });
+//   }
+//
+//   Future<void> _stopAudioAarti() async {
+//     try {
+//       await aartiPlayer.pause();
+//     } catch (e) {}
+//     setState(() {
+//       isPlayingAarti = false;
+//     });
+//   }
+//
+//   Future<void> _playAudioHanumanG() async {
+//     if (!isPlayingB) {
+//       await _stopAudioA();
+//       await _stopShankh();
+//       try {
+//         await audioPlayer.setAsset('assets/shri-hanuman-chalisa.mp3');
+//         await audioPlayer.play();
+//         setState(() {
+//           isPlayingB = true;
+//         });
+//       } catch (e) {
+//         debugPrint('Error playing hanuman chalisa: $e');
+//       }
+//     } else {
+//       await _stopAudioB();
+//     }
+//   }
+//
+//   Future<void> playAartiAudio() async {
+//     if (!isPlayingB) {
+//       await _stopAudioA();
+//       await _stopShankh();
+//       try {
+//         await aartiPlayer.setAsset('assets/Mandir-Aarti.mp3');
+//         await aartiPlayer.play();
+//         setState(() {
+//           isPlayingAarti = true;
+//         });
+//       } catch (e) {
+//         debugPrint('Error playing hanuman chalisa: $e');
+//       }
+//     } else {
+//       await _stopAudioB();
+//     }
+//   }
+//
+//   Future<void> _stopAudioB() async {
+//     try {
+//       await audioPlayer.stop();
+//     } catch (e) {}
+//     setState(() {
+//       isPlayingB = false;
+//     });
+//   }
+//
+//   // SNOW animation
+//   void startSnowAnimation() {
+//     if (isSnowing) return;
+//     isSnowing = true;
+//
+//     _snowTimer = Timer.periodic(const Duration(milliseconds: 200), (t) {
+//       final width = MediaQuery.of(context).size.width;
+//       final height = MediaQuery.of(context).size.height;
+//
+//       var data = SnowModel(
+//         size: (math.Random().nextInt(16) + 20).toDouble(),
+//         top: -10,
+//         left: math.Random().nextDouble() * width * 0.95,
+//         duration: math.Random().nextInt(8) + 4,
+//       );
+//
+//       setState(() {
+//         listSnow.add(data);
+//       });
+//
+//       // animate it to bottom next frame (we use a delayed setState)
+//       Future.delayed(const Duration(milliseconds: 100), () {
+//         if (!mounted) return;
+//         setState(() {
+//           listSnow.last.top = height;
+//         });
+//       });
+//
+//       if (t.tick > 50) {
+//         stopSnowAnimation();
+//       }
+//
+//       // minor wind effect safely (guard index)
+//       if (t.tick > 50 && listSnow.length > 5) {
+//         var max = 4;
+//         var min = listSnow.length - 5;
+//         var randomIndex = math.Random().nextInt(max) + min;
+//         if (randomIndex >= 0 && randomIndex < listSnow.length) {
+//           setState(() {
+//             listSnow[randomIndex].left =
+//                 listSnow[randomIndex].left! +
+//                 (listSnow[randomIndex].left! > width * 0.5 ? -50.0 : 50.0);
+//           });
+//         }
+//       }
+//     });
+//   }
+//
+//   void stopSnowAnimation() {
+//     isSnowing = false;
+//     _snowTimer?.cancel();
+//     _snowTimer = null;
+//   }
+//
+//
+//   void startThaliAnimation() {
+//     _thaliAnimationController.reset();
+//     _thaliAnimationController.repeat();
+//     startSnowAnimation();
+//     _startBellsForAarti();
+//     playAartiAudio();
+//
+//     // Ensure it runs at least 10 seconds unless user stops it manually
+//     Future.delayed(const Duration(seconds: 10), () {
+//       if (mounted && aartitap) {
+//         stopThaliAnimationAndResetPosition();
+//       }
+//     });
+//   }
+//
+//   void stopThaliAnimationAndResetPosition() {
+//     _thaliAnimationController.reset();
+//     setState(() {
+//       aartitap = false;
+//       positionX = 0.0;
+//       positionY = 0.0;
+//     });
+//     stopSnowAnimation();
+//     _stopBellsAndCenter();
+//     _stopAudioAarti();
+//   }
+//
+//   void _startBellsForAarti() {
+//     // If already running, restart the timer
+//     _bellStopTimer?.cancel();
+//
+//     // Repeat continuously
+//     _leftBellAnimationController.repeat();
+//     // Slight phase difference for realism
+//     Future.delayed(const Duration(milliseconds: 40), () {
+//       _rightBellAnimationController.repeat();
+//     });
+//
+//     // Stop after 8 seconds
+//     _bellStopTimer = Timer(const Duration(seconds: 8), _stopBellsAndCenter);
+//   }
+//
+//   void _startBells() {
+//     // If already running, restart the timer
+//     _bellStopTimer?.cancel();
+//
+//     // Repeat continuously
+//     _leftBellAnimationController.repeat();
+//     // Slight phase difference for realism
+//     Future.delayed(const Duration(milliseconds: 40), () {
+//       _rightBellAnimationController.repeat();
+//     });
+//
+//     // Stop after 8 seconds
+//     _bellStopTimer = Timer(const Duration(seconds: 3), _stopBellsAndCenter);
+//   }
+//
+//   void _stopBellsAndCenter() {
+//     _bellStopTimer?.cancel();
+//     _bellStopTimer = null;
+//
+//     // Stop animation
+//     _leftBellAnimationController.stop();
+//     _rightBellAnimationController.stop();
+//
+//     // Animate gently back to center (angle = 0)
+//     final settleDuration = const Duration(milliseconds: 400);
+//     _leftBellAnimationController.animateTo(
+//       0.0,
+//       duration: settleDuration,
+//       curve: Curves.easeOut,
+//     );
+//     _rightBellAnimationController.animateTo(
+//       0.0,
+//       duration: settleDuration,
+//       curve: Curves.easeOut,
+//     );
+//
+//     setState(() {}); // update UI
+//   }
+//
+//   @override
+//   void dispose() {
+//     _snowTimer?.cancel();
+//     _leftBellAnimationController.dispose();
+//     _rightBellAnimationController.dispose();
+//     _animationTimer?.cancel();
+//     _thaliAnimationController.dispose();
+//     _shankhStateSub?.cancel();
+//     _playerShankh.dispose();
+//     audioPlayer.dispose();
+//     super.dispose();
+//   }
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     final double defaultTop =
+//         context.screenHeight * 0.8 - context.screenHeight * 0.09;
+//     final double defaultLeft = context.screenWidth * 0.3;
+//
+//     return Scaffold(
+//       extendBodyBehindAppBar: true,
+//       backgroundColor: Color(0xFF2F2057),
+//       appBar: PreferredSize(
+//         preferredSize: Size(context.screenWidth, 68),
+//         child: CustomAppBar(),
+//       ),
+//       body: Stack(
+//         children: <Widget>[
+//           // Main content stack
+//           Stack(
+//             children: <Widget>[
+//               // God view background
+//               SizedBox(
+//                 width: context.screenWidth,
+//                 height: context.screenHeight * 0.8 - 15,
+//                 child: Image.asset(
+//                   'assets/images/bajrangbaliji.png',
+//                   fit: BoxFit.fill,
+//                 ),
+//               ),
+//
+//               // left bell
+//               Positioned(
+//                 left: 12,
+//                 child: GestureDetector(
+//                   onTap: () {
+//                     _startBells();
+//                   },
+//                   child: SizedBox(
+//                     width: context.screenWidth * 0.1,
+//                     height: context.screenHeight * 0.8,
+//                     child: Padding(
+//                       padding: const EdgeInsets.only(left: 8.0),
+//                       child: AnimatedBuilder(
+//                         animation: _leftBellAnimationController,
+//                         builder: (context, child) {
+//                           // Sine wave motion
+//                           final angle =
+//                               math.sin(
+//                                 _leftBellAnimationController.value *
+//                                     2 *
+//                                     math.pi,
+//                               ) *
+//                               (math.pi / 16); // swing amplitude (~18°)
+//                           return Transform.rotate(
+//                             angle: angle,
+//                             child: Image.asset(
+//                               'assets/images/bell.png',
+//                               width: 50,
+//                               height: 50,
+//                             ),
+//                           );
+//                         },
+//                       ),
+//                     ),
+//                   ),
+//                 ),
+//               ),
+//
+//               // right bell
+//               Positioned(
+//                 right: 12,
+//                 child: GestureDetector(
+//                   onTap: () {
+//                     _startBells();
+//                   },
+//                   child: SizedBox(
+//                     width: context.screenWidth * 0.1,
+//                     height: context.screenHeight * 0.8,
+//                     child: Padding(
+//                       padding: const EdgeInsets.only(left: 8.0),
+//                       child: AnimatedBuilder(
+//                         animation: _rightBellAnimationController,
+//                         builder: (context, child) {
+//                           final angle =
+//                               math.sin(
+//                                 _rightBellAnimationController.value *
+//                                     2 *
+//                                     math.pi,
+//                               ) *
+//                               (math.pi / 16);
+//                           return Transform.rotate(
+//                             angle: angle,
+//                             child: Image.asset(
+//                               'assets/images/bell.png',
+//                               width: 50,
+//                               height: 50,
+//                             ),
+//                           );
+//                         },
+//                       ),
+//                     ),
+//                   ),
+//                 ),
+//               ),
+//
+//               // mat view
+//               Align(
+//                 alignment: Alignment.bottomCenter,
+//                 child: SizedBox(
+//                   width: context.screenWidth,
+//                   height:
+//                       context.screenHeight * 0.4 + context.screenHeight * 0.09,
+//                   child: Image.asset('assets/images/homebottombackground.png'),
+//                 ),
+//               ),
+//
+//               // mandir shape
+//               Positioned(
+//                 top: context.screenHeight * 0.12,
+//                 left: 2,
+//                 child: SizedBox(
+//                   width: context.screenWidth,
+//                   height: context.screenHeight * 0.2 + 30,
+//                   child: Image.asset(
+//                     'assets/images/mandirshape.png',
+//                     fit: BoxFit.fill,
+//                   ),
+//                 ),
+//               ),
+//
+//               // Puja thali view with AnimatedBuilder
+//               AnimatedBuilder(
+//                 animation: _thaliAnimation,
+//                 builder: (context, child) {
+//                   // when aartitap==false -> at default position
+//                   // when aartitap==true -> animate circular motion using sine/cos
+//                   final double angle = 2 * math.pi * _thaliAnimation.value;
+//                   double currentTop = aartitap == false
+//                       ? defaultTop
+//                       : context.screenHeight * 0.9 -
+//                             context.screenHeight * 0.45 +
+//                             100 * math.sin(angle);
+//                   double currentLeft = aartitap == false
+//                       ? defaultLeft
+//                       : context.screenWidth * 0.5 -
+//                             context.screenWidth * 0.17 +
+//                             100 * math.cos(angle) +
+//                             20;
+//
+//                   return Positioned(
+//                     top: currentTop,
+//                     left: currentLeft,
+//                     child: Transform.translate(
+//                       offset: Offset(positionX, positionY),
+//                       child: GestureDetector(
+//                         onPanUpdate: (details) {
+//                           if (isDragging) {
+//                             setState(() {
+//                               positionX += details.delta.dx;
+//                               positionY += details.delta.dy;
+//                             });
+//                           }
+//                         },
+//                         onPanStart: (_) {
+//                           setState(() {
+//                             isDragging = true;
+//                           });
+//                         },
+//                         onPanEnd: (_) {
+//                           setState(() {
+//                             isDragging = false;
+//                           });
+//                         },
+//                         child: SizedBox(
+//                           width:
+//                               context.screenWidth * 0.5 -
+//                               context.screenHeight * 0.07,
+//                           height: context.screenHeight * 0.3,
+//                           child: Image.asset(
+//                             isDragging || aartitap
+//                                 ? 'assets/images/pujathali.png'
+//                                 : 'assets/images/pujathali.png',
+//                             fit: BoxFit.contain,
+//                           ),
+//                         ),
+//                       ),
+//                     ),
+//                   );
+//                 },
+//               ),
+//
+//               // Left bottom vertical controls (diya, flower, shell)
+//               Positioned(
+//                 top: context.screenHeight * 0.8 - context.screenHeight * 0.07,
+//                 left: 2.0,
+//                 child: SizedBox(
+//                   child: Padding(
+//                     padding: const EdgeInsets.only(bottom: 8.0),
+//                     child: Column(
+//                       mainAxisSize: MainAxisSize.min,
+//                       children: [
+//                         InkWell(
+//                           onTap: () {
+//                             if (aartitap) {
+//                               stopThaliAnimationAndResetPosition();
+//                             } else {
+//                               setState(() {
+//                                 aartitap = true;
+//                               });
+//                               startThaliAnimation();
+//                             }
+//                           },
+//                           child: CustomImageContainer(
+//                             imagePath: "assets/images/diya.png",
+//                           ),
+//                         ),
+//                         const SizedBox(height: 3.0),
+//                         InkWell(
+//                           onTap: () {
+//                             if (isSnowing) {
+//                               stopSnowAnimation();
+//                             } else {
+//                               startSnowAnimation();
+//                             }
+//                           },
+//                           child: CustomImageContainer(
+//                             imagePath: "assets/images/flower.png",
+//                           ),
+//                         ),
+//                         const SizedBox(height: 3.0),
+//                         InkWell(
+//                           onTap: () {
+//                             _debugAndPlayShankhFull();
+//                           },
+//                           child: CustomImageContainer(
+//                             imagePath: "assets/images/shell.png",
+//                           ),
+//                         ),
+//                         const SizedBox(height: 5.0),
+//                       ],
+//                     ),
+//                   ),
+//                 ),
+//               ),
+//
+//               // Right bottom music control
+//               Positioned(
+//                 top: context.screenHeight * 0.9 - context.screenHeight * 0.04,
+//                 right: 2.0,
+//                 child: Padding(
+//                   padding: const EdgeInsets.only(bottom: 12.0, right: 8.0),
+//                   child: InkWell(
+//                     onTap: () {
+//                       _playAudioHanumanG();
+//                     },
+//                     child: Container(
+//                       width: context.screenWidth * 0.1 + 12,
+//                       height:
+//                           context.screenHeight * 0.1 -
+//                           context.screenHeight * 0.04,
+//                       decoration: const BoxDecoration(
+//                         image: DecorationImage(
+//                           image: AssetImage('assets/images/swastikcircle.png'),
+//                         ),
+//                       ),
+//                       child: Center(
+//                         child: Padding(
+//                           padding: const EdgeInsets.all(5.0),
+//                           child: Image.asset(
+//                             'assets/images/music.png',
+//                             width: context.screenWidth * 0.07 - 5,
+//                             height: context.screenHeight * 0.04 - 5,
+//                             fit: BoxFit.fill,
+//                           ),
+//                         ),
+//                       ),
+//                     ),
+//                   ),
+//                 ),
+//               ),
+//
+//               // Snow layer (AnimatedPositioned list)
+//               Stack(
+//                 children: listSnow.map((element) {
+//                   return AnimatedPositioned(
+//                     key: ValueKey(element),
+//                     top: element.top,
+//                     left: element.left,
+//                     duration: Duration(seconds: element.duration ?? 4),
+//                     curve: Curves.linear,
+//                     child: Container(
+//                       width: element.size,
+//                       height: element.size,
+//                       decoration: BoxDecoration(
+//                         borderRadius: BorderRadius.circular(50),
+//                         image: const DecorationImage(
+//                           image: AssetImage('assets/images/flower.png'),
+//                         ),
+//                       ),
+//                     ),
+//                   );
+//                 }).toList(),
+//               ),
+//             ],
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+// }
+//
+// /// Simple SnowModel used in this widget (replace with your own if you have one)
+// class SnowModel {
+//   double? size;
+//   double? top;
+//   double? left;
+//   int? duration; // seconds
+//
+//   SnowModel({this.size, this.top, this.left, this.duration});
+// }
