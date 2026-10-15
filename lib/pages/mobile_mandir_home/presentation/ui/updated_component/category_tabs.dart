@@ -51,6 +51,22 @@ class TopTabBarSmall extends StatefulWidget {
 
 class _TopTabBarSmallState extends State<TopTabBarSmall> {
   final ScrollController _scrollController = ScrollController();
+  final List<GlobalKey> _tabKeys = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _tabKeys.addAll(List.generate(widget.tabs.length, (_) => GlobalKey()));
+  }
+
+  @override
+  void didUpdateWidget(covariant TopTabBarSmall oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.tabs.length != _tabKeys.length) {
+      _tabKeys.clear();
+      _tabKeys.addAll(List.generate(widget.tabs.length, (_) => GlobalKey()));
+    }
+  }
 
   @override
   void dispose() {
@@ -59,27 +75,47 @@ class _TopTabBarSmallState extends State<TopTabBarSmall> {
   }
 
   void _scrollToTab(int index) {
+    if (index < 0 || index >= _tabKeys.length) return;
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!_scrollController.hasClients) return;
-      if (index >= 5) {
-        _scrollController.animateTo(
-          _scrollController.position.maxScrollExtent,
-          duration: const Duration(milliseconds: 250),
-          curve: Curves.easeOut,
-        );
-      } else if (index <= 1) {
-        _scrollController.animateTo(
-          0,
-          duration: const Duration(milliseconds: 250),
-          curve: Curves.easeOut,
-        );
+      if (!mounted || !_scrollController.hasClients) return;
+      final tabContext = _tabKeys[index].currentContext;
+      if (tabContext == null) return;
+
+      final RenderBox? tabBox = tabContext.findRenderObject() as RenderBox?;
+      final RenderBox? scrollBox = context.findRenderObject() as RenderBox?;
+      if (tabBox == null || scrollBox == null) return;
+
+      final Offset tabPosition = tabBox.localToGlobal(Offset.zero, ancestor: scrollBox);
+      final double tabLeft = tabPosition.dx;
+      final double tabWidth = tabBox.size.width;
+      final double tabRight = tabLeft + tabWidth;
+      final double viewportWidth = scrollBox.size.width;
+
+      const double margin = 16.0;
+
+      // Agar tab already completely visible hai screen par, toh scroll bilkul mat karo
+      if (tabLeft >= margin && tabRight <= viewportWidth - margin) {
+        return;
+      }
+
+      // Agar tab cut off hai ya screen se bahar hai, toh use smoothly bring into view karo
+      final double currentOffset = _scrollController.offset;
+      double targetOffset;
+
+      if (tabLeft < margin) {
+        targetOffset = currentOffset + tabLeft - margin;
       } else {
-        final double target = index * 75.0;
-        final double maxScroll = _scrollController.position.maxScrollExtent;
+        targetOffset = currentOffset + (tabRight - viewportWidth) + margin;
+      }
+
+      final double maxScroll = _scrollController.position.maxScrollExtent;
+      final double clampedOffset = targetOffset.clamp(0.0, maxScroll);
+
+      if ((clampedOffset - currentOffset).abs() > 2.0) {
         _scrollController.animateTo(
-          target.clamp(0.0, maxScroll),
+          clampedOffset,
           duration: const Duration(milliseconds: 250),
-          curve: Curves.easeOut,
+          curve: Curves.easeOutCubic,
         );
       }
     });
@@ -109,7 +145,9 @@ class _TopTabBarSmallState extends State<TopTabBarSmall> {
                 itemBuilder: (context, index) {
                   final isSelected = index == state.topTabIndex;
 
-                  return GestureDetector(
+                  return Container(
+                    key: index < _tabKeys.length ? _tabKeys[index] : null,
+                    child: GestureDetector(
                       behavior: HitTestBehavior.opaque,
                       onTap: () {
                         if ([1, 6].contains(index) &&
@@ -192,15 +230,15 @@ class _TopTabBarSmallState extends State<TopTabBarSmall> {
                                 : 0,
                             decoration: BoxDecoration(
                               color: Colors.white,
-                              borderRadius:
-                              BorderRadius.circular(2),
+                              borderRadius: BorderRadius.circular(2),
                             ),
                           ),
                         ],
-                      ),)
-                    )
-                  ;
-                },
+                      ),
+                    ),
+                  ),
+                );
+              },
               ),
               Positioned(
                 left: 4,

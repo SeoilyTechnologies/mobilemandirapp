@@ -90,19 +90,36 @@ class MobileHomeLarge extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
 
                                 children: <Widget>[
-                                  Container(
-                                    padding: const EdgeInsets.all(20),
-                                    decoration: BoxDecoration(
-                                      image: DecorationImage(
-                                        image: AssetImage(
-                                          Utils.getHeaderBackground(
-                                            state.topTabIndex,
+                                  Stack(
+                                    children: [
+                                      Positioned.fill(
+                                        child: AnimatedSwitcher(
+                                          duration: const Duration(milliseconds: 300),
+                                          switchInCurve: Curves.easeInOut,
+                                          switchOutCurve: Curves.easeInOut,
+                                          layoutBuilder: (Widget? currentChild, List<Widget> previousChildren) {
+                                            return Stack(
+                                              fit: StackFit.expand,
+                                              children: <Widget>[
+                                                ...previousChildren,
+                                                if (currentChild != null) currentChild,
+                                              ],
+                                            );
+                                          },
+                                          child: Image.asset(
+                                            Utils.getHeaderBackground(
+                                              state.topTabIndex,
+                                            ),
+                                            key: ValueKey<int>(state.topTabIndex),
+                                            fit: BoxFit.fill,
+                                            width: double.infinity,
+                                            height: double.infinity,
                                           ),
                                         ),
-                                        fit: BoxFit.fill,
                                       ),
-                                    ),
-                                    child: Column(
+                                      Container(
+                                        padding: const EdgeInsets.all(20),
+                                        child: Column(
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         SizedBox(
@@ -246,6 +263,8 @@ class MobileHomeLarge extends StatelessWidget {
                                       ],
                                     ),
                                   ),
+                                ],
+                              ),
 
                                   getTabChildView(state.topTabIndex),
 
@@ -255,7 +274,6 @@ class MobileHomeLarge extends StatelessWidget {
                             ),
                           ],
                         ),
-                        if (state.isLoading) AppLoader.show(state.isLoading),
                       ],
                     ),),
 
@@ -315,9 +333,7 @@ class MobileHomeLarge extends StatelessWidget {
                     context,
                   ).add(HomeMantra("mantra"));
                 },
-              )
-              ,
-              if (state.isLoading) const LoadingIndicator(),
+                  ),
 
               /////////////////
             ],

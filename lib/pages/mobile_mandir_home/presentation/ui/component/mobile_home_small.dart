@@ -6,7 +6,6 @@ import 'package:mandirapp/pages/mobile_mandir_home/presentation/ui/updated_compo
 import 'package:mandirapp/pages/mobile_mandir_home/presentation/ui/updated_component/todayaarti/bhajan_screen.dart';
 import 'package:mandirapp/common/utils/share_helper.dart';
 import 'package:share_plus/share_plus.dart';
-import '../../../../../common/component/loading_indicator.dart';
 import '../../../../../common/component/search_bar.dart';
 import '../../../../../common/local/SharedPrefs.dart';
 import '../../../../../common/network/app_constant.dart';
@@ -70,25 +69,42 @@ class MobileHomeSmall extends StatelessWidget {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: <Widget>[
-                                      Container(
-                                        padding: const EdgeInsets.symmetric(
-                                          horizontal: 14,
-                                          vertical: 12,
-                                        ),
-                                        width: context.screenWidth,
-                                        decoration: BoxDecoration(
-                                          image: DecorationImage(
-                                            image: AssetImage(
-                                              Utils.getHeaderBackground(
-                                                state.topTabIndex,
+                                      Stack(
+                                        children: [
+                                          Positioned.fill(
+                                            child: AnimatedSwitcher(
+                                              duration: const Duration(milliseconds: 300),
+                                              switchInCurve: Curves.easeInOut,
+                                              switchOutCurve: Curves.easeInOut,
+                                              layoutBuilder: (Widget? currentChild, List<Widget> previousChildren) {
+                                                return Stack(
+                                                  fit: StackFit.expand,
+                                                  children: <Widget>[
+                                                    ...previousChildren,
+                                                    if (currentChild != null) currentChild,
+                                                  ],
+                                                );
+                                              },
+                                              child: Image.asset(
+                                                Utils.getHeaderBackground(
+                                                  state.topTabIndex,
+                                                ),
+                                                key: ValueKey<int>(state.topTabIndex),
+                                                fit: BoxFit.fill,
+                                                width: double.infinity,
+                                                height: double.infinity,
                                               ),
                                             ),
-                                            fit: BoxFit.fill,
                                           ),
-                                        ),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                                          Container(
+                                            padding: const EdgeInsets.symmetric(
+                                              horizontal: 14,
+                                              vertical: 12,
+                                            ),
+                                            width: context.screenWidth,
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
                                           children: [
                                             SizedBox(
                                               height:
@@ -187,7 +203,9 @@ class MobileHomeSmall extends StatelessWidget {
                                           ],
                                         ),
                                       ),
-                                      getTabChildView(state.topTabIndex),
+                                    ],
+                                  ),
+                                  getTabChildView(state.topTabIndex),
                                     ],
                                   ),
                                 ),
@@ -257,7 +275,6 @@ class MobileHomeSmall extends StatelessWidget {
                     ).add(HomeMantra("mantra"));
                   },
                 ),
-                if (state.isLoading) const LoadingIndicator(),
               ],
             ),
           ),
