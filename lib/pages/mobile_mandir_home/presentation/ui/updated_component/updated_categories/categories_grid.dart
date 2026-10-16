@@ -165,6 +165,20 @@ class CategoriesGridSmall extends StatelessWidget {
             children: <Widget>[
               CategoryCard(
                 width: context.screenWidth * 0.29,
+                title: context.l10n.festivalEvents,
+                isCoomingSoon: false,
+                assets: [
+                  "assets/categories_images/cat_7_aa_1.png",
+                  "assets/categories_images/cat_7_aa_2.png",
+                  "assets/categories_images/cat_7_aa_3.png",
+                  "assets/categories_images/cat_7_aa_4.png",
+                ],
+                onTap: () {
+                  Navigator.of(context).pushNamed(AppRoutes.FESTIVAL_EVENT_PAGE);
+                },
+              ),
+              CategoryCard(
+                width: context.screenWidth * 0.29,
                 title: context.l10n.muhuratLagan,
                 isCoomingSoon: true,
                 assets: [
@@ -175,20 +189,6 @@ class CategoriesGridSmall extends StatelessWidget {
                 ],
                 onTap: () {
                   Navigator.of(context).pushNamed(AppRoutes.SHUBH_MUHURATE_PAGE);
-                },
-              ),
-              CategoryCard(
-                width: context.screenWidth * 0.29,
-                title: context.l10n.festivalEvents,
-                isCoomingSoon: true,
-                assets: [
-                  "assets/categories_images/cat_7_aa_1.png",
-                  "assets/categories_images/cat_7_aa_2.png",
-                  "assets/categories_images/cat_7_aa_3.png",
-                  "assets/categories_images/cat_7_aa_4.png",
-                ],
-                onTap: () {
-                  Navigator.of(context).pushNamed(AppRoutes.FESTIVAL_EVENT_PAGE);
                 },
               ),
               CategoryCard(
@@ -361,6 +361,20 @@ class CategoriesGridMedium extends StatelessWidget {
             children: <Widget>[
               CategoryCardMedium(
                 width: context.screenWidth * 0.29,
+                title: context.l10n.festivalEvents,
+                isCoomingSoon: false,
+                assets: [
+                  "assets/new_design/icon/festival_one.png",
+                  "assets/new_design/icon/festival_two.png",
+                  "assets/new_design/icon/festival_three.png",
+                  "assets/new_design/icon/festival_four.png",
+                ],
+                onTap: () {
+                  Navigator.of(context).pushNamed(AppRoutes.FESTIVAL_EVENT_PAGE);
+                },
+              ),
+              CategoryCardMedium(
+                width: context.screenWidth * 0.29,
                 title: context.l10n.muhuratLagan,
                 isCoomingSoon: true,
                 assets: [
@@ -371,20 +385,6 @@ class CategoriesGridMedium extends StatelessWidget {
                 ],
                 onTap: () {
                   Navigator.of(context).pushNamed(AppRoutes.SHUBH_MUHURATE_PAGE);
-                },
-              ),
-              CategoryCardMedium(
-                width: context.screenWidth * 0.29,
-                title: context.l10n.festivalEvents,
-                isCoomingSoon: true,
-                assets: [
-                  "assets/new_design/icon/festival_one.png",
-                  "assets/new_design/icon/festival_two.png",
-                  "assets/new_design/icon/festival_three.png",
-                  "assets/new_design/icon/festival_four.png",
-                ],
-                onTap: () {
-                  Navigator.of(context).pushNamed(AppRoutes.FESTIVAL_EVENT_PAGE);
                 },
               ),
               CategoryCardMedium(
@@ -674,6 +674,20 @@ class CategoriesGridLarge extends StatelessWidget {
             children: <Widget>[
               CategoryCardLarg(
                 width: context.screenWidth * 0.3,
+                title: context.l10n.festivalEvents,
+                isCoomingSoon: false,
+                assets: [
+                  "assets/new_design/icon/festival_one.png",
+                  "assets/new_design/icon/festival_two.png",
+                  "assets/new_design/icon/festival_three.png",
+                  "assets/new_design/icon/festival_four.png",
+                ],
+                onTap: () {
+                  Navigator.of(context).pushNamed(AppRoutes.FESTIVAL_EVENT_PAGE);
+                },
+              ),
+              CategoryCardLarg(
+                width: context.screenWidth * 0.3,
                 title: context.l10n.muhuratLagan,
                 isCoomingSoon: true,
                 assets: [
@@ -684,20 +698,6 @@ class CategoriesGridLarge extends StatelessWidget {
                 ],
                 onTap: () {
                   Navigator.of(context).pushNamed(AppRoutes.SHUBH_MUHURATE_PAGE);
-                },
-              ),
-              CategoryCardLarg(
-                width: context.screenWidth * 0.3,
-                title: context.l10n.festivalEvents,
-                isCoomingSoon: true,
-                assets: [
-                  "assets/new_design/icon/festival_one.png",
-                  "assets/new_design/icon/festival_two.png",
-                  "assets/new_design/icon/festival_three.png",
-                  "assets/new_design/icon/festival_four.png",
-                ],
-                onTap: () {
-                  Navigator.of(context).pushNamed(AppRoutes.FESTIVAL_EVENT_PAGE);
                 },
               ),
               CategoryCardLarg(
@@ -829,6 +829,20 @@ class CategoriesGridLargeLandScape extends StatelessWidget {
               ),
               CategoryCardLarg(
                 width: context.screenWidth * 0.17,
+                title: context.l10n.festivalEvents,
+                isCoomingSoon: false,
+                assets: [
+                  "assets/new_design/icon/festival_one.png",
+                  "assets/new_design/icon/festival_two.png",
+                  "assets/new_design/icon/festival_three.png",
+                  "assets/new_design/icon/festival_four.png",
+                ],
+                onTap: () {
+                  Navigator.of(context).pushNamed(AppRoutes.FESTIVAL_EVENT_PAGE);
+                },
+              ),
+              CategoryCardLarg(
+                width: context.screenWidth * 0.17,
                 title: context.l10n.muhuratLagan,
                 isCoomingSoon: true,
                 assets: [
@@ -839,20 +853,6 @@ class CategoriesGridLargeLandScape extends StatelessWidget {
                 ],
                 onTap: () {
                   Navigator.of(context).pushNamed(AppRoutes.SHUBH_MUHURATE_PAGE);
-                },
-              ),
-              CategoryCardLarg(
-                width: context.screenWidth * 0.17,
-                title: context.l10n.festivalEvents,
-                isCoomingSoon: true,
-                assets: [
-                  "assets/new_design/icon/festival_one.png",
-                  "assets/new_design/icon/festival_two.png",
-                  "assets/new_design/icon/festival_three.png",
-                  "assets/new_design/icon/festival_four.png",
-                ],
-                onTap: () {
-                  Navigator.of(context).pushNamed(AppRoutes.FESTIVAL_EVENT_PAGE);
                 },
               ),
               CategoryCardLarg(

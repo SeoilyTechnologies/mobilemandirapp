@@ -6,6 +6,7 @@ import '../../../aarti_chalisa_list/data/entity/aarti_model.dart'
     hide TempleModel;
 import '../../../aarti_chalisa_list/presentation/ui/component/category_rail.dart';
 
+import '../../../dynamic_tab/data/entity/dynamic_tab_models.dart';
 import '../../../sewa_module/select_category/data/entity/categories_list_response.dart';
 import '../../../templelist/data/entity/temple_model.dart';
 import '../../data/entity/bannerEntity/banner_model.dart';
@@ -52,6 +53,8 @@ abstract class MobileHomeState with _$MobileHomeState {
     @Default('') String homeForYouSearchText,
     @Default(0) int selectedGodTabIndex,
     @Default(0) int topTabIndex,
+    // Admin-configured tabs; empty → built-in tabs (see HomeTabsStateX.tabs).
+    @Default([]) List<HomeTabModel> homeTabs,
 
     @Default(false) bool isWishlistLoading,
     @Default('') String wishlistMessage,

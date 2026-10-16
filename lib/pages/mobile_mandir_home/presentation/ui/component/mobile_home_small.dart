@@ -21,6 +21,8 @@ import '../../../../auth/signin/data/entity/login_response.dart';
 import '../../bloc/mobile_home_bloc.dart';
 import '../../bloc/mobile_home_event.dart';
 import '../../bloc/mobile_home_state.dart';
+import '../../../../dynamic_tab/home_tab_registry.dart';
+import '../../../../dynamic_tab/presentation/ui/home_tab_helpers.dart';
 import 'for_you/mobile_home_small_for_you.dart';
 import 'mobile_home_god/mobile_home_god_page.dart';
 import 'mobile_home_reward/mobile_home_reward_page.dart';
@@ -71,21 +73,15 @@ class MobileHomeSmall extends StatelessWidget {
                                         CrossAxisAlignment.start,
                                     children: <Widget>[
                                       Container(
-                                        padding: const EdgeInsets.symmetric(
-                                          horizontal: 14,
-                                          vertical: 12,
+                                        // Admin banner sits flush on the header's bottom edge (Figma).
+                                        padding: EdgeInsets.fromLTRB(
+                                          14,
+                                          12,
+                                          14,
+                                          state.currentTab.banner != null ? 0 : 12,
                                         ),
                                         width: context.screenWidth,
-                                        decoration: BoxDecoration(
-                                          image: DecorationImage(
-                                            image: AssetImage(
-                                              Utils.getHeaderBackground(
-                                                state.topTabIndex,
-                                              ),
-                                            ),
-                                            fit: BoxFit.fill,
-                                          ),
-                                        ),
+                                        decoration: HomeTabUi.headerDecoration(state),
                                         child: Column(
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
@@ -166,7 +162,8 @@ class MobileHomeSmall extends StatelessWidget {
                                             const SizedBox(height: 10),
                                             Utils.getTopBanner(context, state),
 
-                                            state.topTabIndex == 0
+                                            state.currentTab.key == HomeTabKeys.all &&
+                                                    state.currentTab.banner == null
                                                 ? state
                                                           .filterBasedBanners
                                                           .isEmpty
@@ -183,11 +180,13 @@ class MobileHomeSmall extends StatelessWidget {
                                                             ),
                                                           ],
                                                         )
-                                                : SizedBox(height: 6),
+                                                : SizedBox(
+                                                    height: state.currentTab.banner != null ? 0 : 6,
+                                                  ),
                                           ],
                                         ),
                                       ),
-                                      getTabChildView(state.topTabIndex),
+                                      HomeTabUi.body(state, getTabChildView),
                                     ],
                                   ),
                                 ),
@@ -243,6 +242,13 @@ class MobileHomeSmall extends StatelessWidget {
                     BlocProvider.of<MobileHomeBloc>(
                       context,
                     ).add(HomeGetBanner());
+
+
+                    BlocProvider.of<MobileHomeBloc>(
+
+                      context,
+
+                    ).add(const MobileHomeEvent.loadHomeTabs());
 
                     BlocProvider.of<MobileHomeBloc>(
                       context,

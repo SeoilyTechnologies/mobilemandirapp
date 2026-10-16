@@ -25,6 +25,9 @@ import '../../data/entity/home_temple/home_temple_list_response.dart';
 import '../../data/entity/panchang_day/panchangDay.dart';
 import '../../data/entity/panchang_day/static_panchang_response.dart';
 import '../../domain/usecase/mobile_home_usecase.dart';
+import '../../../dynamic_tab/data/entity/dynamic_tab_models.dart';
+import '../../../dynamic_tab/domain/usecase/dynamic_tab_usecase.dart';
+import '../../../dynamic_tab/home_tab_registry.dart';
 import 'mobile_home_event.dart';
 import 'mobile_home_state.dart';
 
@@ -35,6 +38,7 @@ class MobileHomeBloc extends Bloc<MobileHomeEvent, MobileHomeState> {
   final WishlistUsecase _wishlistUsecase = getIt<WishlistUsecase>();
   final LoginUsecase _signupUsecase = getIt<LoginUsecase>();
   final MobileHomeUsecase _mobileHomeUsecase = getIt<MobileHomeUsecase>();
+  final DynamicTabUsecase _dynamicTabUsecase = getIt<DynamicTabUsecase>();
   final AartiChalisaKathaUsecase _aartiChalisaKathaRepositery =
       getIt<AartiChalisaKathaUsecase>();
 
@@ -79,6 +83,12 @@ class MobileHomeBloc extends Bloc<MobileHomeEvent, MobileHomeState> {
     on<SelectHomeGodTab>(_onSelectHomeGodTab);
     on<ResetGodSearchHome>(_onResetGodSearch);
     on<ChangeTopTab>(_onChangeTopTab);
+    on<SelectTopTab>(_onSelectTopTab);
+    on<LoadHomeTabs>(_onLoadHomeTabs);
+    // Still dispatched by pull-to-refresh and the no-internet dialog, but its
+    // handler was removed and nothing reads the result. Without a handler,
+    // bloc throws StateError and the refresh never completes.
+    on<GetPanchangByDate>((event, emit) {});
     on<GetCalendarEvent>(_onGetCalendarEvent);
     on<HomeGetSantList>(_getSantList);
     on<GetYoutubePlaylistVideos>(_onGetYoutubePlaylistVideos);
@@ -698,7 +708,87 @@ class MobileHomeBloc extends Bloc<MobileHomeEvent, MobileHomeState> {
   }
 
   void _onChangeTopTab(ChangeTopTab event, Emitter<MobileHomeState> emit) {
-    emit(state.copyWith(topTabIndex: event.index));
+    final key = HomeTabKeys.fromLegacyIndex(event.index);
+    final index = state.tabs.indexWhere((t) => t.key == key);
+    if (index >= 0) {
+      emit(state.copyWith(topTabIndex: index));
+    } else if (key == HomeTabKeys.all) {
+      emit(state.copyWith(topTabIndex: 0));
+    }
+    // Built-in tab hidden by admin → stay where we are.
+  }
+
+  /// The admin's "open by default" tab is applied once per app session.
+  bool _defaultTabApplied = false;
+
+  /// Open the admin's default tab once — only if the user is still on "All"
+  /// (a deep link / notification that picked another tab wins).
+  void _maybeOpenDefaultTab(Emitter<MobileHomeState> emit) {
+    if (_defaultTabApplied) return;
+    _defaultTabApplied = true;
+    if (state.currentTab.key != HomeTabKeys.all) return;
+    final index = state.tabs.indexWhere((t) => t.isDefault);
+    if (index > 0) emit(state.copyWith(topTabIndex: index));
+  }
+
+  void _onSelectTopTab(SelectTopTab event, Emitter<MobileHomeState> emit) {
+    final last = state.tabs.length - 1;
+    emit(state.copyWith(topTabIndex: event.index.clamp(0, last)));
+  }
+
+  String get _homeTabsCacheKey {
+    final lang = getIt<SharedPrefs>().getString(AppConstant.localeKey);
+    return "${AppConstant.homeTabsCacheKey}_${lang.isEmpty ? 'en' : lang}";
+  }
+
+  /// Replace the tab list, keeping the user on the same tab when it still exists.
+  void _applyHomeTabs(List<HomeTabModel> tabs, Emitter<MobileHomeState> emit) {
+    final currentKey = state.currentTab.key;
+    final next = tabs.isEmpty ? <HomeTabModel>[] : HomeTabKeys.sanitize(tabs);
+    final list = next.isEmpty ? HomeTabKeys.nativeDefaults : next;
+    final index = list.indexWhere((t) => t.key == currentKey);
+    emit(state.copyWith(homeTabs: next, topTabIndex: index >= 0 ? index : 0));
+  }
+
+  Future<void> _onLoadHomeTabs(
+    LoadHomeTabs event,
+    Emitter<MobileHomeState> emit,
+  ) async {
+    final prefs = getIt<SharedPrefs>();
+    final cacheKey = _homeTabsCacheKey;
+
+    if (state.homeTabs.isEmpty) {
+      try {
+        final cached = prefs.getModel<HomeTabListResponse>(
+          cacheKey,
+          (json) => HomeTabListResponse.fromJson(json),
+        );
+        if (cached != null && cached.enabled && cached.data.isNotEmpty) {
+          _applyHomeTabs(cached.data, emit);
+        }
+      } catch (_) {
+        // Corrupt cache → ignore; network result below replaces it.
+      }
+    }
+
+    final result = await _dynamicTabUsecase.callGetHomeTabs();
+    if (isClosed) return;
+    result.fold(
+      (failure) {
+        // Offline / server error → keep cached or built-in tabs.
+      },
+      (response) {
+        if (response.enabled && response.data.isNotEmpty) {
+          prefs.setModel<HomeTabListResponse>(cacheKey, response);
+          _applyHomeTabs(response.data, emit);
+        } else {
+          prefs.setString(cacheKey, '');
+          _applyHomeTabs(const [], emit);
+        }
+      },
+    );
+    // After the start-up "All" selection, so it isn't overwritten.
+    _maybeOpenDefaultTab(emit);
   }
 
   Future<void> _onSelectHomeTab(

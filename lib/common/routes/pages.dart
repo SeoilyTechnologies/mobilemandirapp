@@ -12,6 +12,7 @@ import '../../pages/muhurat_lagan/presentation/ui/muhurat_lagan_page.dart';
 import '../../pages/muhurat_lagan/presentation/ui/muhurat_detail_page.dart';
 import '../../pages/festival_event/presentation/ui/festival_event_page.dart';
 import '../../pages/festival_event/presentation/ui/festival_detail_page.dart';
+import '../../pages/dynamic_tab/presentation/ui/dynamic_page_screen.dart';
 import '../../pages/sharad_pitarpaksh/presentation/ui/sharad_pitarpaksh_page.dart';
 import '../../pages/sharad_pitarpaksh/presentation/ui/sharad_pitarpaksh_detail_page.dart';
 import '../../pages/sharad_pitarpaksh/presentation/bloc/pitru_paksha_bloc.dart';
@@ -332,6 +333,10 @@ class AppPages {
       PageEntitiy(
         route: AppRoutes.FESTIVAL_DETAIL_PAGE_NEW,
         page: const FestivalDetailPage(),
+      ),
+      PageEntitiy(
+        route: AppRoutes.DYNAMIC_PAGE,
+        page: const DynamicPageScreen(),
       ),
       PageEntitiy(
         route: AppRoutes.SHARAD_PITARPAKSH_PAGE,

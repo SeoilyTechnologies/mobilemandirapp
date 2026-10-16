@@ -47,6 +47,8 @@ import '../../../../auth/signin/data/entity/login_response.dart';
 import '../../bloc/mobile_home_bloc.dart';
 import '../../bloc/mobile_home_event.dart';
 import '../../bloc/mobile_home_state.dart';
+import '../../../../dynamic_tab/home_tab_registry.dart';
+import '../../../../dynamic_tab/presentation/ui/home_tab_helpers.dart';
 import 'TithiListView.dart';
 import 'for_you/mobile_home_small_for_you.dart';
 import 'mobile_home_god/mobile_home_god_page.dart';
@@ -91,17 +93,13 @@ class MobileHomeLarge extends StatelessWidget {
 
                                 children: <Widget>[
                                   Container(
-                                    padding: const EdgeInsets.all(20),
-                                    decoration: BoxDecoration(
-                                      image: DecorationImage(
-                                        image: AssetImage(
-                                          Utils.getHeaderBackground(
-                                            state.topTabIndex,
-                                          ),
-                                        ),
-                                        fit: BoxFit.fill,
-                                      ),
-                                    ),
+                                    padding: EdgeInsets.fromLTRB(
+                                20,
+                                20,
+                                20,
+                                state.currentTab.banner != null ? 0 : 20,
+                              ),
+                                    decoration: HomeTabUi.headerDecoration(state),
                                     child: Column(
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
@@ -247,7 +245,7 @@ class MobileHomeLarge extends StatelessWidget {
                                     ),
                                   ),
 
-                                  getTabChildView(state.topTabIndex),
+                                  HomeTabUi.body(state, getTabChildView),
 
                                   // SizedBox(height: 140),
                                 ],

@@ -10,10 +10,7 @@ import '../../../muhurat_lagan/presentation/ui/component/common_vivaran_grid.dar
 class FestivalDetailPage extends StatefulWidget {
   final String title;
 
-  const FestivalDetailPage({
-    super.key,
-    this.title = "Diwali–Festival of Lights",
-  });
+  const FestivalDetailPage({super.key, this.title = "Diwali–Festival of Lights"});
 
   @override
   State<FestivalDetailPage> createState() => _FestivalDetailPageState();
@@ -36,10 +33,7 @@ class _FestivalDetailPageState extends State<FestivalDetailPage> {
       step: "2",
       text: "In the evening, set up and consecrate the idols of Goddess Lakshmi and Lord Ganesha.",
     ),
-    ProcedureStepItem(
-      step: "3",
-      text: "Perform the aarti during the auspicious muhurat and distribute prasad.",
-    ),
+    ProcedureStepItem(step: "3", text: "Perform the aarti during the auspicious muhurat and distribute prasad."),
   ];
 
   final List<String> festivalDos = const [
@@ -76,10 +70,7 @@ class _FestivalDetailPageState extends State<FestivalDetailPage> {
                   child: Container(
                     decoration: const BoxDecoration(
                       gradient: LinearGradient(
-                        colors: [
-                          Color(0xFFB37A0B),
-                          Color(0xFF8C5C00),
-                        ],
+                        colors: [Color(0xFFB37A0B), Color(0xFF8C5C00)],
                         begin: Alignment.topCenter,
                         end: Alignment.bottomCenter,
                       ),
@@ -101,11 +92,7 @@ class _FestivalDetailPageState extends State<FestivalDetailPage> {
                                       color: Colors.white.withValues(alpha: 0.25),
                                       shape: BoxShape.circle,
                                     ),
-                                    child: Icon(
-                                      Icons.arrow_back_ios_new_rounded,
-                                      color: Colors.white,
-                                      size: w * 0.046,
-                                    ),
+                                    child: Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white, size: w * 0.046),
                                   ),
                                 ),
                                 Expanded(
@@ -114,19 +101,13 @@ class _FestivalDetailPageState extends State<FestivalDetailPage> {
                                       Text(
                                         widget.title,
                                         textAlign: TextAlign.center,
-                                        style: AppTextStyle.gilroyBold(
-                                          w * 0.041,
-                                          color: const Color(0xFFFFFFFF),
-                                        ),
+                                        style: AppTextStyle.gilroyBold(w * 0.041, color: const Color(0xFFFFFFFF)),
                                       ),
                                       const SizedBox(height: 2),
                                       Text(
                                         "8 November 2026 · Ravivaar · Kartik Amavasya",
                                         textAlign: TextAlign.center,
-                                        style: AppTextStyle.gilroyMedium(
-                                          w * 0.026,
-                                          color: const Color(0xFFFFFFFF),
-                                        ),
+                                        style: AppTextStyle.gilroyMedium(w * 0.026, color: const Color(0xFFFFFFFF)),
                                       ),
                                     ],
                                   ),
@@ -173,18 +154,12 @@ class _FestivalDetailPageState extends State<FestivalDetailPage> {
                                   children: [
                                     Text(
                                       "Pradosh Kaal Muhurat",
-                                      style: AppTextStyle.gilroyMedium(
-                                        w * 0.031,
-                                        color: const Color(0xFF793C01),
-                                      ),
+                                      style: AppTextStyle.gilroyMedium(w * 0.031, color: const Color(0xFF793C01)),
                                     ),
                                     const SizedBox(height: 4),
                                     Text(
                                       "06:05 PM – 08:00 PM",
-                                      style: AppTextStyle.gilroyBold(
-                                        w * 0.041,
-                                        color: const Color(0xFF000000),
-                                      ),
+                                      style: AppTextStyle.gilroyBold(w * 0.041, color: const Color(0xFF000000)),
                                     ),
                                   ],
                                 ),
@@ -193,18 +168,12 @@ class _FestivalDetailPageState extends State<FestivalDetailPage> {
                                   children: [
                                     Text(
                                       "Avadhi",
-                                      style: AppTextStyle.gilroyMedium(
-                                        w * 0.031,
-                                        color: const Color(0xFF793C01),
-                                      ),
+                                      style: AppTextStyle.gilroyMedium(w * 0.031, color: const Color(0xFF793C01)),
                                     ),
                                     const SizedBox(height: 4),
                                     Text(
                                       "1h 55m",
-                                      style: AppTextStyle.gilroyBold(
-                                        w * 0.041,
-                                        color: const Color(0xFF000000),
-                                      ),
+                                      style: AppTextStyle.gilroyBold(w * 0.041, color: const Color(0xFF000000)),
                                     ),
                                   ],
                                 ),
@@ -220,11 +189,7 @@ class _FestivalDetailPageState extends State<FestivalDetailPage> {
                           title: "The Festival of Lights",
                           child: Text(
                             "Diwali celebrates the victory of light over darkness, good over evil. It marks the joyous return of Lord Rama to Ayodhya after fourteen years of exile, following his triumph over Ravana. Homes are lit with diyas and rangoli to welcome prosperity and happiness, while Goddess Lakshmi is worshipped for wealth and well-being.",
-                            style: AppTextStyle.gilroyRegular(
-                              w * 0.031,
-                              color: const Color(0xFF000000),
-                              height: 1.42,
-                            ),
+                            style: AppTextStyle.gilroyRegular(w * 0.031, color: const Color(0xFF000000), height: 1.42),
                           ),
                         ),
 
@@ -241,10 +206,7 @@ class _FestivalDetailPageState extends State<FestivalDetailPage> {
                         // Card 5: The Do's and Don'ts
                         CommonSectionCard(
                           title: "The Do's and Don'ts",
-                          child: CommonDosDontsCard(
-                            dos: festivalDos,
-                            donts: festivalDonts,
-                          ),
+                          child: CommonDosDontsCard(dos: festivalDos, donts: festivalDonts),
                         ),
 
                         const SizedBox(height: 16),
@@ -259,10 +221,7 @@ class _FestivalDetailPageState extends State<FestivalDetailPage> {
                               children: relatedFestivals.map((item) {
                                 return Container(
                                   margin: const EdgeInsets.only(right: 10),
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 14,
-                                    vertical: 10,
-                                  ),
+                                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
                                   decoration: BoxDecoration(
                                     color: const Color(0xFFFFF9EE),
                                     borderRadius: BorderRadius.circular(8),
@@ -272,18 +231,12 @@ class _FestivalDetailPageState extends State<FestivalDetailPage> {
                                     children: [
                                       Text(
                                         item["name"]!,
-                                        style: AppTextStyle.gilroySemiBold(
-                                          w * 0.031,
-                                          color: const Color(0xFF000000),
-                                        ),
+                                        style: AppTextStyle.gilroySemiBold(w * 0.031, color: const Color(0xFF000000)),
                                       ),
                                       const SizedBox(height: 2),
                                       Text(
                                         item["date"]!,
-                                        style: AppTextStyle.gilroyMedium(
-                                          w * 0.026,
-                                          color: const Color(0xFF793C01),
-                                        ),
+                                        style: AppTextStyle.gilroyMedium(w * 0.026, color: const Color(0xFF793C01)),
                                       ),
                                     ],
                                   ),

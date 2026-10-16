@@ -34,6 +34,9 @@ import '../../pages/god_detail/domain/usecase/god_detail_usecase.dart';
 import '../../pages/mobile_mandir_home/data/repoImpl/mobile_home_rep_impl.dart';
 import '../../pages/mobile_mandir_home/domain/repo/mobile_home_repo.dart';
 import '../../pages/mobile_mandir_home/domain/usecase/mobile_home_usecase.dart';
+import '../../pages/dynamic_tab/data/repoImpl/dynamic_tab_repo_impl.dart';
+import '../../pages/dynamic_tab/domain/repo/dynamic_tab_repo.dart';
+import '../../pages/dynamic_tab/domain/usecase/dynamic_tab_usecase.dart';
 import '../../pages/mobile_mandir_home/presentation/ui/audio_player_service.dart';
 import '../../pages/naamjaap/jaappage_one/data/repoImpl/jaap_repo_impl.dart';
 import '../../pages/naamjaap/jaappage_one/domain/repo/jaap_repo.dart';
@@ -142,6 +145,12 @@ Future<void> serviceLocator() async {
   getIt.registerLazySingleton<MobileHomeRepo>(() => MobileHomeRepImpl());
   getIt.registerLazySingleton<MobileHomeUsecase>(
     () => MobileHomeUsecase(getIt<MobileHomeRepo>()),
+  );
+
+  /* dynamic home tabs + section pages */
+  getIt.registerLazySingleton<DynamicTabRepo>(() => DynamicTabRepoImpl());
+  getIt.registerLazySingleton<DynamicTabUsecase>(
+    () => DynamicTabUsecase(getIt<DynamicTabRepo>()),
   );
 
 

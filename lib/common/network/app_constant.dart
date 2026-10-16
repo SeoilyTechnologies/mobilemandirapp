@@ -1,12 +1,12 @@
 class AppConstant {
-  //static String get baseUrl => "http://localhost:5000/api/";
+  // static String get baseUrl => "http://localhost:5000/api/api/";
   // static String get baseUrl => "http://10.0.2.2:5000/api/";
   //static String get baseUrl => "http://mobilemandirapp.ap-south-1.elasticbeanstalk.com/api/";
   // static String get baseUrl => "https://mobilemandirapp.com/api/";
 // static String get baseUrl => "https://admin.mobilemandirapp.com/api/api/";
-  //static String get baseUrl => "https://2x29p7rg-5000.inc1.devtunnels.ms/api/";
- //static String get baseUrl => "https://release.mobilemandirapp.com/api/api/";
- static String get baseUrl => "https://admin.mobilemandirapp.com/api/api/";
+  // static String get baseUrl => "https://26h4d805-5000.inc1.devtunnels.ms/api/";
+ static String get baseUrl => "https://release.mobilemandirapp.com/api/api/";
+//  static String get baseUrl => "https://admin.mobilemandirapp.com/api/api/";
 
   static String get fileBaseUrl => "https://cdn.mobilemandirapp.com/";
 
@@ -134,6 +134,13 @@ class AppConstant {
   static String get getSantById => "sant/get-sant-by-id";
 
   static String get getBannerList => "banner/list";
+
+  /* Admin-driven home tabs + section pages */
+  static String get homeTabList => "home-tab/list";
+  static String homeTabPage(String slug) => "home-tab/page/${Uri.encodeComponent(slug)}";
+  static const String homeTabsCacheKey = "home_tabs_cache_v1";
+  static String get homeTabPageTags => "home-tab/page-tags";
+  static String get homeTabPages => "home-tab/pages";
 
   static String get getChalisaAartiDayWise =>
       "chalisaaarti/day-wise-chalisa-aartii";

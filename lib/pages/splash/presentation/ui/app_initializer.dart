@@ -53,6 +53,7 @@ class AppInitializer {
     appBloc.add(UserDataUpdate());
 
     /// 2. CRITICAL HOME SCREEN DATA (Fired first to avoid network congestion)
+    mobileHomeBloc.add(const MobileHomeEvent.loadHomeTabs());
     mobileHomeBloc.add(HomeGetBanner());
     mobileHomeBloc.add(GetDayAccordingAartiChalisa(type: "all"));
     mobileHomeBloc.add(const GetCategoriesList());

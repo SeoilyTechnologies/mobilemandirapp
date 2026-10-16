@@ -98,6 +98,8 @@ class AppRoutes {
   static const GOD_DETAIL_PAGE = "/god_detail_pagess";
   static const NEW_CALENDAR_PAGE = "/new_calendar_pagess";
   static const GLOBAL_SEARCH_PAGE = "/gloable-search_page";
+  // Admin-built section page; arguments: {'slug': '<page slug>'}
+  static const DYNAMIC_PAGE = "/dynamic_page";
 
 
 

@@ -1,9 +1,12 @@
 import 'package:mandirapp/l10n/l10n_extension.dart';
 import 'package:mandirapp/l10n/l10n.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter/rendering.dart' show OverflowBoxFit;
 import 'package:share_plus/share_plus.dart';
 import '../../pages/mobile_mandir_home/presentation/bloc/mobile_home_event.dart';
 import '../../pages/mobile_mandir_home/presentation/bloc/mobile_home_state.dart';
+import '../../pages/dynamic_tab/home_tab_registry.dart';
+import '../../pages/dynamic_tab/presentation/ui/widgets/dynamic_banner.dart';
 import '../../pages/mobile_mandir_home/presentation/ui/component/common_top_banner/common_top_banner.dart';
 import '../../pages/mobile_mandir_home/presentation/ui/updated_component/aarti_slider_carousel_slider.dart';
 import '../component/skeleton_loader.dart';
@@ -447,7 +450,19 @@ class Utils {
   }
 
   static Widget getTopBanner(BuildContext context, MobileHomeState state) {
-    switch (state.topTabIndex) {
+    // Admin banner (image / GIF / SVG / HTML) wins over the built-in one.
+    final tabBanner = state.currentTab.banner;
+    if (tabBanner != null) {
+      // Full-bleed like Figma, escaping the header's side padding.
+      final screenWidth = MediaQuery.sizeOf(context).width;
+      return OverflowBox(
+        minWidth: screenWidth,
+        maxWidth: screenWidth,
+        fit: OverflowBoxFit.deferToChild,
+        child: DynamicBanner(banner: tabBanner),
+      );
+    }
+    switch (state.currentLegacyIndex) {
       case 0:
         return state.filterBasedBanners.isEmpty
             ? const SizedBox()

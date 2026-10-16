@@ -79,7 +79,14 @@ abstract class MobileHomeEvent with _$MobileHomeEvent {
   const factory MobileHomeEvent.selectHomeGodTab({required int index}) =
       SelectHomeGodTab;
 
+  /// Switch to the n-th *built-in* tab (0 all … 6 reward), wherever it is now.
   const factory MobileHomeEvent.changeTopTab(int index) = ChangeTopTab;
+
+  /// Tab bar tap: index in the current (possibly admin-configured) tab list.
+  const factory MobileHomeEvent.selectTopTab(int index) = SelectTopTab;
+
+  /// Load admin-configured tabs (cache first, then network).
+  const factory MobileHomeEvent.loadHomeTabs() = LoadHomeTabs;
 
   const factory MobileHomeEvent.getDayAccordingAartiChalisa({
     @Default('') String type,

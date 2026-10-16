@@ -4,10 +4,11 @@ import 'package:mandirapp/common/values/values_exports.dart';
 import 'updated_categories/aarti_bhajan_tab.dart';
 
 import '../../../../../common/routes/exports.dart';
-import '../../../../../common/utils/auth_helper.dart';
 import '../../bloc/mobile_home_bloc.dart';
-import '../../bloc/mobile_home_event.dart';
 import '../../bloc/mobile_home_state.dart';
+import '../../../../dynamic_tab/data/entity/dynamic_tab_models.dart';
+import '../../../../dynamic_tab/home_tab_registry.dart';
+import '../../../../dynamic_tab/presentation/ui/home_tab_helpers.dart';
 
 class TopTabItem {
   final String title;
@@ -58,10 +59,10 @@ class _TopTabBarSmallState extends State<TopTabBarSmall> {
     super.dispose();
   }
 
-  void _scrollToTab(int index) {
+  void _scrollToTab(int index, int count) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!_scrollController.hasClients) return;
-      if (index >= 5) {
+      if (index >= count - 2) {
         _scrollController.animateTo(
           _scrollController.position.maxScrollExtent,
           duration: const Duration(milliseconds: 250),
@@ -88,9 +89,10 @@ class _TopTabBarSmallState extends State<TopTabBarSmall> {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<MobileHomeBloc, MobileHomeState>(
-      listenWhen: (previous, current) => previous.topTabIndex != current.topTabIndex,
+      listenWhen: (previous, current) =>
+          previous.topTabIndex != current.topTabIndex || previous.homeTabs != current.homeTabs,
       listener: (context, state) {
-        _scrollToTab(state.topTabIndex);
+        _scrollToTab(state.topTabIndex, state.tabs.length);
       },
       builder: (context, state) {
         return SizedBox(
@@ -104,79 +106,26 @@ class _TopTabBarSmallState extends State<TopTabBarSmall> {
                 ),
                 scrollDirection: Axis.horizontal,
                 physics: const BouncingScrollPhysics(),
-                itemCount: widget.tabs.length,
+                itemCount: state.tabs.length,
 
                 itemBuilder: (context, index) {
                   final isSelected = index == state.topTabIndex;
+                  final tab = state.tabs[index];
+                  final title = HomeTabUi.title(context, tab);
 
                   return GestureDetector(
                       behavior: HitTestBehavior.opaque,
-                      onTap: () {
-                        if ([1, 6].contains(index) &&
-                            context.requireLogin()) {
-                          return;
-                        }
-
-                        context.read<MobileHomeBloc>().add(
-                          MobileHomeEvent.changeTopTab(index),
-                        );
-                        if (index == 1) {
-                          context.read<MobileHomeBloc>().add(
-                            MobileHomeEvent.selectHomeForYouTab(
-                              index: 0,
-                            ),
-                          );
-
-                          context.read<MobileHomeBloc>().add(
-                            ResetSearchForYou(),
-                          );
-
-                          context.read<MobileHomeBloc>().add(
-                            const MobileHomeEvent.getHomeForYouData(
-                              type: "aartibhajan",
-                            ),
-                          );
-                        }
-
-                        if (index == 2) {
-                          context.read<MobileHomeBloc>().add(
-                            ResetTempleSearchForYou(),
-                          );
-
-                          context.read<MobileHomeBloc>().add(
-                            const GetHomeTempleDataList(false),
-                          );
-                        }
-                        if (index == 3) {
-                          BlocProvider.of<MobileHomeBloc>(
-                            context,
-                          ).add(ResetGodSearchHome());
-
-                          context.read<MobileHomeBloc>().add(const GetPopularGodList(false));
-                          context.read<MobileHomeBloc>().add(const MobileHomeEvent.getNewGodData(false));
-                        }
-
-                        if (index == 6) {
-                          context.read<MobileHomeBloc>().add(
-                            const MobileHomeEvent.getRewardOverView(),
-                          );
-                        }
-                      },
+                      onTap: () => HomeTabUi.onTap(context, tab, index),
                       child:Padding( padding: EdgeInsets.only(
                         right: context.screenWidth * 0.11,
                       ),
                       child:  Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Image.asset(
-                            widget.tabs[index].asset,
-                            width: 20,
-                            height: 20,
-                            color: Colors.white,
-                          ),
+                          HomeTabUi.icon(tab, 20),
                           const SizedBox(height: 6),
                           Text(
-                            getLocalizedCategoryName(context, widget.tabs[index].title),
+                            title,
                             style: AppTextStyle.gilroyBold(
                               context.screenWidth * 0.032,
                               color: AppColor.appWhiteColor,
@@ -188,7 +137,7 @@ class _TopTabBarSmallState extends State<TopTabBarSmall> {
                             const Duration(milliseconds: 200),
                             height: 2,
                             width: isSelected
-                                ? getUnderlineWidth(index) * 0.6
+                                ? _underlineWidth(context, tab, title, 0.6)
                                 : 0,
                             decoration: BoxDecoration(
                               color: Colors.white,
@@ -216,6 +165,17 @@ class _TopTabBarSmallState extends State<TopTabBarSmall> {
         );
       },
     );
+  }
+
+  /// Built-in tabs keep their tuned widths; others follow the text width.
+  double _underlineWidth(BuildContext context, HomeTabModel tab, String title, double factor) {
+    final legacy = HomeTabKeys.legacyIndexOf(tab.key);
+    if (legacy >= 0 && tab.title.isEmpty) return getUnderlineWidth(legacy) * factor;
+    final painter = TextPainter(
+      text: TextSpan(text: title, style: AppTextStyle.gilroyBold(context.screenWidth * 0.032)),
+      textDirection: TextDirection.ltr,
+    )..layout();
+    return painter.width * 0.9;
   }
 
   double getUnderlineWidth(int index) {
@@ -265,71 +225,25 @@ class TopTabBarMedium extends StatelessWidget {
                 ),
                 scrollDirection: Axis.horizontal,
                 physics: const BouncingScrollPhysics(),
-                itemCount: tabs.length,
+                itemCount: state.tabs.length,
                 itemBuilder: (context, index) {
                   final isSelected = index == state.topTabIndex;
+                  final tab = state.tabs[index];
+                  final title = HomeTabUi.title(context, tab);
 
                   return Padding(
                     padding: EdgeInsets.only(
                       right: context.screenWidth * 0.13,
                     ),
                     child: GestureDetector(
-                      onTap: () {
-                        if ([1, 6].contains(index) &&
-                            context.requireLogin()) {
-                          return;
-                        }
-
-                        if (index == 1) {
-                          context.read<MobileHomeBloc>().add(
-                            MobileHomeEvent.selectHomeForYouTab(
-                              index: 0,
-                            ),
-                          );
-
-                          context.read<MobileHomeBloc>().add(
-                            ResetSearchForYou(),
-                          );
-
-                          context.read<MobileHomeBloc>().add(
-                            const MobileHomeEvent.getHomeForYouData(
-                              type: "aartibhajan",
-                            ),
-                          );
-                        }
-
-                        if (index == 2) {
-                          context.read<MobileHomeBloc>().add(
-                            ResetTempleSearchForYou(),
-                          );
-
-                          context.read<MobileHomeBloc>().add(
-                            const GetHomeTempleDataList(false),
-                          );
-                        }
-
-                        if (index == 6) {
-                          context.read<MobileHomeBloc>().add(
-                            const MobileHomeEvent.getRewardOverView(),
-                          );
-                        }
-
-                        context.read<MobileHomeBloc>().add(
-                          MobileHomeEvent.changeTopTab(index),
-                        );
-                      },
+                      onTap: () => HomeTabUi.onTap(context, tab, index),
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Image.asset(
-                            tabs[index].asset,
-                            width: 24,
-                            height: 24,
-                            color: Colors.white,
-                          ),
+                          HomeTabUi.icon(tab, 24),
                           const SizedBox(height: 8),
                           Text(
-                            getLocalizedCategoryName(context, tabs[index].title),
+                            title,
                             style: AppTextStyle.gilroyBold(
                               context.screenWidth * 0.018,
                               color: AppColor.appWhiteColor,
@@ -341,7 +255,9 @@ class TopTabBarMedium extends StatelessWidget {
                             const Duration(milliseconds: 200),
                             height: 3,
                             width: isSelected
-                                ? getUnderlineWidth(index)
+                                ? (HomeTabKeys.legacyIndexOf(tab.key) >= 0 && tab.title.isEmpty
+                                    ? getUnderlineWidth(HomeTabKeys.legacyIndexOf(tab.key))
+                                    : title.length * 7.5)
                                 : 0,
                             decoration: BoxDecoration(
                               color: Colors.white,
